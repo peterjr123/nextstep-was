@@ -1,13 +1,12 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
+import http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.IOUtils;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,20 +23,32 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World Again!!".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            String requestMessage = IOUtils.readRequest(new BufferedReader(new InputStreamReader(in)));
+            log.debug("New Http Request\n" + requestMessage);
+
+            HttpRequestParser httpRequestParser = new HttpRequestParserImpl(requestMessage);
+            HttpRequestMessage httpRequestMessage = httpRequestParser.parse();
+
+            handleRequest(new DataOutputStream(out), httpRequestMessage);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void handleRequest(DataOutputStream dos, HttpRequestMessage httpRequestMessage) {
+        HttpResponseFactory factory = new HttpResponseFactoryImpl();
+        HttpResponseMessage httpResponseMessage = factory.createHttpResponse(httpRequestMessage);
+
+        write200Header(dos, httpResponseMessage.getHttpHeader());
+        responseBody(dos, httpResponseMessage.getResponseBody());
+    }
+
+    private void write200Header(DataOutputStream dos, HttpHeader responseHeader) {
+
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("Content-Type: " + responseHeader.getHeader("Content-Type") + "\r\n");
+            dos.writeBytes("Content-Length: " + responseHeader.getHeader("Content-Length") + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());

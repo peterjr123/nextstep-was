@@ -1,8 +1,13 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,5 +22,25 @@ public class IOUtilsTest {
         BufferedReader br = new BufferedReader(sr);
 
         logger.debug("parse body : {}", IOUtils.readData(br, data.length()));
+    }
+
+    @Test
+    public void readFile() throws IOException {
+        String filePath = "/index.html";
+        Path path = Paths.get("./webapp"+ filePath);
+        Assert.assertEquals(Files.size(path), IOUtils.readFile(filePath).length);
+    }
+
+    @Test
+    public void readRequest() throws IOException {
+        String data = "" +
+                "Host: localhost:8080\n" +
+                "Connection: keep-alive\n" +
+                "Accept: */*\n";
+
+        StringReader sr = new StringReader(data);
+        BufferedReader br = new BufferedReader(sr);
+
+        System.out.println(IOUtils.readRequest(br));
     }
 }

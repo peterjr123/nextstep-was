@@ -2,6 +2,10 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class IOUtils {
     /**
@@ -16,5 +20,22 @@ public class IOUtils {
         char[] body = new char[contentLength];
         br.read(body, 0, contentLength);
         return String.copyValueOf(body);
+    }
+
+    public static byte[] readFile(String fileUrl) throws IOException {
+        return Files.readAllBytes(Paths.get("./webapp" + fileUrl));
+    }
+
+    public static String readRequest(BufferedReader br) throws IOException {
+        String message = "";
+        String line;
+
+        while((line = br.readLine()) != null) {
+            if("".equals(line))
+                break;
+            message += (line + "\n");
+        }
+
+        return message;
     }
 }
