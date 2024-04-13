@@ -1,5 +1,11 @@
 package http;
 
+import http.support.UrlDecoder;
+import http.support.UrlDecoderImpl;
+import util.HttpRequestUtils;
+
+import java.util.Map;
+
 public class HttpRequestParserImpl implements HttpRequestParser {
     String messageString;
     public HttpRequestParserImpl(String messageString) {
@@ -21,6 +27,27 @@ public class HttpRequestParserImpl implements HttpRequestParser {
 
     private void parseFirstLine(HttpRequestMessage message, String firstLine) {
         String[] parsed = firstLine.split(" ");
-        message.setUrl(parsed[1]);
+        String rawUrl = parsed[1];
+
+        // url
+        UrlDecoder urlDecoder = new UrlDecoderImpl();
+        String url = urlDecoder.decode(rawUrl);
+        message.setUrl(url);
+
+        // request path
+        if(url.contains("?")) {
+            int queryStringDelimiterIdx = url.indexOf("?");
+            message.setRequestPath(url.substring(0, queryStringDelimiterIdx));
+
+            // query string
+            String queryString = url.substring(queryStringDelimiterIdx + 1);
+            Map<String, String> parameters = HttpRequestUtils.parseQueryString(queryString);
+            for(String parameter : parameters.keySet()) {
+                message.addQueryString(parameter, parameters.get(parameter));
+            }
+        }
+        else {
+            message.setRequestPath(url);
+        }
     }
 }

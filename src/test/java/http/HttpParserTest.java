@@ -1,4 +1,4 @@
-package util;
+package http;
 
 import http.*;
 import org.junit.Assert;
@@ -29,7 +29,23 @@ public class HttpParserTest {
         HttpRequestParser parser = new HttpRequestParserImpl(httpMessageString);
         HttpRequestMessage message = parser.parse();
 
-        Assert.assertEquals("/index.html", message.getUrl());
+        Assert.assertEquals("/index.html", message.getRequestPath());
         Assert.assertEquals("localhost:8080", message.getHttpHeader().getHeader("Host"));
+    }
+
+    @Test
+    public void parsingSignUpRequestTest() {
+        String httpMessageString = "" +
+                "GET /user/create?userId=peterjr123&password=password&name=joonsuk&email=peterjr123%40slipp.net HTTP/1.1\n" +
+                "Host: localhost:8080\n";
+
+        HttpRequestParser parser = new HttpRequestParserImpl(httpMessageString);
+        HttpRequestMessage message = parser.parse();
+
+        Assert.assertEquals("/user/create", message.getRequestPath());
+        Assert.assertEquals("peterjr123", message.getQueryStringValue("userId"));
+        Assert.assertEquals("password", message.getQueryStringValue("password"));
+        Assert.assertEquals("joonsuk", message.getQueryStringValue("name"));
+        Assert.assertEquals("peterjr123@slipp.net", message.getQueryStringValue("email"));
     }
 }

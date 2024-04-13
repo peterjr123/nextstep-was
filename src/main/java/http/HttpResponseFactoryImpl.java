@@ -20,7 +20,7 @@ public class HttpResponseFactoryImpl implements HttpResponseFactory {
     private byte[] createResponseBody(HttpRequestMessage httpRequestMessage) {
         byte[] body;
         try {
-            body = IOUtils.readFile(httpRequestMessage.getUrl());
+            body = IOUtils.readFile(httpRequestMessage.getRequestPath());
         }
         catch(IOException e) {
             body = "hello world".getBytes();
@@ -31,14 +31,20 @@ public class HttpResponseFactoryImpl implements HttpResponseFactory {
     private HttpHeader createResponseHeader(HttpRequestMessage httpRequestMessage, int contentLength) {
         HttpHeader responseHeader = new HttpHeader();
 
-        String url = httpRequestMessage.getUrl();
-        String extension = url.substring(url.lastIndexOf("."), url.length());
+        String requestPath = httpRequestMessage.getRequestPath();
 
-        if(extension.equals(".js")) {
-            responseHeader.addHeader("Content-Type", "application/javascript");
-        }
-        else if(extension.equals(".css")) {
-            responseHeader.addHeader("Content-Type", "text/css");
+        if(requestPath.contains(".")) {
+            String extension = requestPath.substring(requestPath.lastIndexOf("."), requestPath.length());
+
+            if(extension.equals(".js")) {
+                responseHeader.addHeader("Content-Type", "application/javascript");
+            }
+            else if(extension.equals(".css")) {
+                responseHeader.addHeader("Content-Type", "text/css");
+            }
+            else {
+                responseHeader.addHeader("Content-Type", "text/html");
+            }
         }
         else {
             responseHeader.addHeader("Content-Type", "text/html");
