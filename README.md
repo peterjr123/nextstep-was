@@ -35,7 +35,9 @@ http로 전송한 index.html을 비교하였음
 * 
 
 ### 요구사항 5 - cookie
-* 
+* 요구사항 3번에서 고려했던 추가적인 http요청(여기에서는 user/login)에 대한 handling을 쉽게 추가할 수 있도록 strategy 디자인 패턴을 사용한 것이
+굉장히 효과적이었던 것을 확인할 수 있었다.  
+실질적으로 단 2개의 클래스 (dispatch와 strategy)를 수정한 것만으로도 요구사항을 만족시킬 수 있었다. good!
 
 ### 요구사항 6 - stylesheet 적용
 * 
