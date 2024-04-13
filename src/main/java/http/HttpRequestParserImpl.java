@@ -27,7 +27,11 @@ public class HttpRequestParserImpl implements HttpRequestParser {
 
     private void parseFirstLine(HttpRequestMessage message, String firstLine) {
         String[] parsed = firstLine.split(" ");
+        String method = parsed[0];
         String rawUrl = parsed[1];
+
+        // http request method
+        message.setRequestMethod(HttpRequestMethod.valueOf(method));
 
         // url
         UrlDecoder urlDecoder = new UrlDecoderImpl();

@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import http.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -32,15 +33,18 @@ public class IOUtilsTest {
     }
 
     @Test
-    public void readRequest() throws IOException {
-        String data = "" +
+    public void readRequestHeader() throws IOException {
+        String headerData = "" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
                 "Accept: */*\n";
+        String data = headerData +
+                "\n" +
+                "body";
 
         StringReader sr = new StringReader(data);
         BufferedReader br = new BufferedReader(sr);
 
-        System.out.println(IOUtils.readRequest(br));
+        Assert.assertEquals(headerData.length(), IOUtils.readRequestHeader(br).length());
     }
 }

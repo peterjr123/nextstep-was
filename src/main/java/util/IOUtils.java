@@ -26,7 +26,8 @@ public class IOUtils {
         return Files.readAllBytes(Paths.get("./webapp" + fileUrl));
     }
 
-    public static String readRequest(BufferedReader br) throws IOException {
+    // last line include \n (line-feed)
+    public static String readRequestHeader(BufferedReader br) throws IOException {
         String message = "";
         String line;
 

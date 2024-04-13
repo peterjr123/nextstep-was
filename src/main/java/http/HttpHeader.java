@@ -9,6 +9,9 @@ public class HttpHeader {
     public void addHeader(String name, String description) {
         headerMap.put(name, description);
     }
+    public boolean hasHeader(String name) {
+        return headerMap.containsKey(name);
+    }
 
     public String getHeader(String name) {
         return headerMap.get(name);
