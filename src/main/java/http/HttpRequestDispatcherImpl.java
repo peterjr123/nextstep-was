@@ -1,9 +1,6 @@
 package http;
 
-import http.strategy.DefaultRequestHandlingStrategy;
-import http.strategy.FileRequestHandlingStrategy;
-import http.strategy.RequestHandlingStrategy;
-import http.strategy.SignUpRequestHandlingStrategy;
+import http.strategy.*;
 
 public class HttpRequestDispatcherImpl implements HttpRequestDispatcher {
     @Override
@@ -14,6 +11,9 @@ public class HttpRequestDispatcherImpl implements HttpRequestDispatcher {
         }
         else if(httpRequestMessage.getRequestPath().equals("/user/create")) {
             return new SignUpRequestHandlingStrategy(httpRequestMessage);
+        }
+        else if(httpRequestMessage.getRequestPath().equals("/user/login")) {
+            return new LoginRequestHandlingStrategy(httpRequestMessage);
         }
         else {
             return new DefaultRequestHandlingStrategy(httpRequestMessage);

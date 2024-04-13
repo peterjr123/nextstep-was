@@ -30,11 +30,12 @@ public class RequestHandler extends Thread {
 
             HttpRequestParser httpRequestParser = new HttpRequestParserImpl(requestMessage);
             HttpRequestMessage httpRequestMessage = httpRequestParser.parse();
-            log.debug("New Http Request : " + httpRequestMessage.getUrl());
+            log.debug("New Http Request : " + httpRequestMessage.getRequestPath());
 
             if(httpRequestMessage.getHttpHeader().hasHeader("Content-Length")) {
                 int contentLength = Integer.parseInt(httpRequestMessage.getHttpHeader().getHeader("Content-Length"));
                 String body = IOUtils.readData(br, contentLength);
+                log.debug("body : " + body);
                 httpRequestMessage.setBody(body);
             }
 

@@ -1,5 +1,6 @@
 package http.strategy;
 
+import db.DataBase;
 import http.HttpRequestMessage;
 import http.HttpRequestMethod;
 import http.HttpResponseMessage;
@@ -29,7 +30,9 @@ public class SignUpRequestHandlingStrategy implements RequestHandlingStrategy {
         else if(httpRequestMessage.getRequestMethod() == HttpRequestMethod.POST) {
             user = createUserByBody();
         }
+        DataBase.addUser(user);
         log.debug("new user object created: " + user);
+
 
         HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
         httpResponseMessage.setStatusCode("303 See Other");
