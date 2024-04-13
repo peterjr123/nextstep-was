@@ -32,6 +32,8 @@ public class SignUpRequestHandlingStrategy implements RequestHandlingStrategy {
         log.debug("new user object created: " + user);
 
         HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
+        httpResponseMessage.setStatusCode("303 See Other");
+        httpResponseMessage.getHttpHeader().addHeader("Location", "/index.html");
         return httpResponseMessage;
     }
 

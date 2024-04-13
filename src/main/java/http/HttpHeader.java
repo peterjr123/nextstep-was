@@ -2,6 +2,7 @@ package http;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class HttpHeader {
     Map<String, String> headerMap = new HashMap<>();
@@ -15,5 +16,8 @@ public class HttpHeader {
 
     public String getHeader(String name) {
         return headerMap.get(name);
+    }
+    public Set<String> getHeaderNames() {
+        return headerMap.keySet();
     }
 }

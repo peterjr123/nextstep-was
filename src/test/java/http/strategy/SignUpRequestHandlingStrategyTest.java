@@ -3,6 +3,8 @@ package http.strategy;
 import http.HttpRequestMessage;
 import http.HttpRequestParser;
 import http.HttpRequestParserImpl;
+import http.HttpResponseMessage;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SignUpRequestHandlingStrategyTest {
@@ -32,6 +34,9 @@ public class SignUpRequestHandlingStrategyTest {
         message.setBody(bodyData);
 
         RequestHandlingStrategy strategy = new SignUpRequestHandlingStrategy(message);
-        strategy.handleRequest();
+        HttpResponseMessage responseMessage = strategy.handleRequest();
+
+        Assert.assertTrue(responseMessage.getStatusCode().equals("303 See Other"));
+        Assert.assertTrue(responseMessage.getHttpHeader().hasHeader("Location"));
     }
 }

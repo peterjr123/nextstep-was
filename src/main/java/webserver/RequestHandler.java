@@ -52,16 +52,25 @@ public class RequestHandler extends Thread {
     }
 
     private void sendResponseMessage(DataOutputStream dos, HttpResponseMessage responseMessage) {
-        write200Header(dos, responseMessage.getHttpHeader());
+        writeStatusCode(dos, responseMessage);
+        writeHeader(dos, responseMessage.getHttpHeader());
         responseBody(dos, responseMessage.getResponseBody());
     }
 
-    private void write200Header(DataOutputStream dos, HttpHeader responseHeader) {
-
+    private void writeStatusCode(DataOutputStream dos, HttpResponseMessage responseMessage) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + responseHeader.getHeader("Content-Type") + "\r\n");
-            dos.writeBytes("Content-Length: " + responseHeader.getHeader("Content-Length") + "\r\n");
+            dos.writeBytes("HTTP/1.1 " + responseMessage.getStatusCode() + " \r\n");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+    }
+
+    private void writeHeader(DataOutputStream dos, HttpHeader responseHeader) {
+        try {
+            for(String name : responseHeader.getHeaderNames()) {
+                dos.writeBytes(name + ": " + responseHeader.getHeader(name) + "\r\n");
+            }
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
