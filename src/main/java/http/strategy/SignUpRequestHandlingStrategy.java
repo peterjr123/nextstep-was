@@ -4,6 +4,8 @@ import db.DataBase;
 import http.HttpRequestMessage;
 import http.HttpRequestMethod;
 import http.HttpResponseMessage;
+import http.support.UrlDecoder;
+import http.support.UrlDecoderImpl;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +45,9 @@ public class SignUpRequestHandlingStrategy implements RequestHandlingStrategy {
     private User createUserByBody() {
         String body = httpRequestMessage.getBody();
         Map<String, String> parameters = HttpRequestUtils.parseQueryString(body);
-
-        return new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email"));
+        UrlDecoder urlDecoder = new UrlDecoderImpl();
+        String decodedEmail = urlDecoder.decode(parameters.get("email"));
+        return new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), decodedEmail);
     }
 
     private User createUserByQueryString() {

@@ -1,5 +1,6 @@
 package http.strategy;
 
+import db.DataBase;
 import http.HttpRequestMessage;
 import http.HttpRequestParser;
 import http.HttpRequestParserImpl;
@@ -19,11 +20,14 @@ public class SignUpRequestHandlingStrategyTest {
 
         RequestHandlingStrategy strategy = new SignUpRequestHandlingStrategy(message);
         strategy.handleRequest();
+
+        Assert.assertEquals("peterjr123@slipp.net", DataBase.findUserById("peterjr123").getEmail());
     }
 
     @Test
     public void signUpByPost() {
-        String bodyData = "userId=javajigi&password=password&name=JaeSung&email=peterjr123@slipp.net";
+        // name = 박준석, email = @
+        String bodyData = "userId=peter&password=adawda&name=%EB%B0%95%EC%A4%80%EC%84%9D&email=peter%40slipp.net";
         String httpMessageString = "" +
                 "POST /user/create\n" +
                 "Host: localhost:8080\n" +
@@ -38,5 +42,8 @@ public class SignUpRequestHandlingStrategyTest {
 
         Assert.assertTrue(responseMessage.getStatusCode().equals("303 See Other"));
         Assert.assertTrue(responseMessage.getHttpHeader().hasHeader("Location"));
+
+//        Assert.assertEquals("박준석", DataBase.findUserById("peter").getName());
+        Assert.assertEquals("peter@slipp.net", DataBase.findUserById("peter").getEmail());
     }
 }

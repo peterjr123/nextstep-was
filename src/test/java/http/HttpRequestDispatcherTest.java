@@ -1,9 +1,6 @@
 package http;
 
-import http.strategy.FileRequestHandlingStrategy;
-import http.strategy.LoginRequestHandlingStrategy;
-import http.strategy.RequestHandlingStrategy;
-import http.strategy.SignUpRequestHandlingStrategy;
+import http.strategy.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,5 +46,16 @@ public class HttpRequestDispatcherTest {
         strategy = dispatcher.dispatch(message);
 
         Assert.assertTrue(strategy instanceof LoginRequestHandlingStrategy);
+
+        // 4. user list
+        httpMessageString = "" +
+                "POST /user/list.html\n" +
+                "Host: localhost:8080\n";
+
+        parser = new HttpRequestParserImpl(httpMessageString);
+        message = parser.parse();
+        strategy = dispatcher.dispatch(message);
+
+        Assert.assertTrue(strategy instanceof UserListRequestHandlingStrategy);
     }
 }
