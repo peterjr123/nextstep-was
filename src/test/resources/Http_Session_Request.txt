@@ -1,0 +1,3 @@
+GET /user/create HTTP/1.1
+Cookie: JSESSIONID=42f146c3-5dff-4c25-a4e4-1aa44470a86e
+

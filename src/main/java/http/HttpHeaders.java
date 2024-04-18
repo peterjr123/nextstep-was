@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpRequestUtils;
 
 class HttpHeaders {
 	private static final String CONTENT_LENGTH = "Content-Length";
@@ -27,6 +28,11 @@ class HttpHeaders {
     	String header = getHeader(name);
     	return header == null ? 0 : Integer.parseInt(header);
     }
+
+	public String getCookie(String name) {
+		Map<String, String> cookies = HttpRequestUtils.parseCookies(headers.get("Cookie"));
+		return cookies.get(name);
+	}
     
     int getContentLength() {
     	return getIntHeader(CONTENT_LENGTH);

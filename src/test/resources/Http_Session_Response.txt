@@ -1,0 +1,4 @@
+HTTP/1.1 302 Found 
+Set-Cookie: JSESSIONID=0c98e980-99d8-4830-922b-d29e72c0874f 
+Location: /index.html 
+

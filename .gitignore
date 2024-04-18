@@ -5,3 +5,5 @@
 /.project
 /.idea
 web-application-server.iml
+build/
+.gradle

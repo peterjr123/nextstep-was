@@ -44,4 +44,6 @@ public class HttpRequestTest {
         assertEquals("1", request.getParameter("id"));
         assertEquals("javajigi", request.getParameter("userId"));
     }
+
+
 }

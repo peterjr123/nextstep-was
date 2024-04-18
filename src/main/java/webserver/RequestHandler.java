@@ -1,7 +1,6 @@
 package webserver;
 
-import http.HttpRequest;
-import http.HttpResponse;
+import http.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +28,10 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
+
+            if(request.getCookie("JSESSIONID") == null) {
+                response.addHeader("Set-Cookie", "JSESSIONID=" + HttpSessionRepository.createSession().getId());
+            }
 
             Controller controller = RequestMapping.getController(request.getPath());
             if (controller == null) {
